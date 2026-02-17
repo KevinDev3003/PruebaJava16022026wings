@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Producto</title>
+    <style>
+        body { font-family: Arial, sans-serif; background:#f5f5f5; padding:20px; }
+        .card { width: 520px; background:#fff; padding:18px; border:1px solid #ddd; }
+        .row { display:flex; gap:10px; align-items:center; margin:10px 0; }
+        label { width: 160px; }
+        input, select { flex:1; padding:6px; }
+        .btn { padding:6px 10px; border:1px solid #333; background:#fff; cursor:pointer; text-decoration:none; color:#000; }
+        .actions { display:flex; gap:10px; margin-top:14px; }
+        .error { background:#ffe6e6; border:1px solid #ffb3b3; padding:8px; margin-bottom:10px; color:#b30000; }
+    </style>
+</head>
+<body>
+
+<div class="card" style="border:2px solid #1e66ff; border-radius:10px; box-shadow:0 6px 18px rgba(30,102,255,0.15);">
+    <h3 style="margin-top:0;"
+        th:text="${producto.idProducto == null ? 'Nuevo Producto' : 'Editar Producto'}"></h3>
+
+    <div class="error" th:if="${error}" th:text="${error}"></div>
+
+    <form th:action="${producto.idProducto == null} ? @{/productos} : @{/productos/{id}(id=${producto.idProducto})}"
+          th:object="${producto}" method="post">
+
+        <!-- ID_PRODUCTO se escribe solo al crear un nuevo productoe -->
+        <div class="row">
+            <label>Código:</label>
+
+            <input type="number" name="idProducto"
+                   th:value="${producto.idProducto}"
+                   th:if="${producto.idProducto == null}"
+                   required />
+
+            <div th:if="${producto.idProducto != null}" style="flex:1; display:flex; gap:10px;">
+                <input type="number" th:value="${producto.idProducto}" disabled style="flex:1;" />
+                <input type="hidden" name="idProducto" th:value="${producto.idProducto}" />
+            </div>
+        </div>
+
+        <div class="row">
+            <label>Nombre producto:</label>
+            <input type="text" th:field="*{nombreProducto}" required />
+        </div>
+
+        <!-- Familia existe -->
+        <div class="row">
+            <label>Contraseña:</label>
+            <select name="familiaId" id="familiaId">
+                <option value="" th:selected="${producto.familia == null}">Seleccione...</option>
+                <option th:each="f : ${familias}"
+                        th:value="${f.idFamilia}"
+                        th:text="${f.nombreFamilia}"
+                        th:selected="${producto.familia != null and producto.familia.idFamilia == f.idFamilia}">
+                </option>
+            </select>
+        </div>
+
+        <!-- Nueva familia solo se permite si no se eligio una familia existente -->
+        <div class="row">
+            <label>Contraseña (opcional):</label>
+            <input type="text" name="nuevaFamiliaNombre" id="nuevaFamiliaNombre" placeholder="Ej: Lácteos" />
+        </div>
+
+        <div class="row">
+            <label>Precio:</label>
+            <input type="number" step="0.01" min="0" th:field="*{precio}" required />
+        </div>
+
+        <div class="actions">
+            <button class="btn" type="submit">Guardar</button>
+            <a class="btn" th:href="@{/productos}">Cancelar</a>
+        </div>
+
+    </form>
+</div>
+
+<script>
+    function toggleNuevaFamilia() {
+        const select = document.getElementById('familiaId');
+        const inputNueva = document.getElementById('nuevaFamiliaNombre');
+
+        if (!select || !inputNueva) return;
+
+        const haySeleccion = select.value && select.value.trim() !== "";
+
+        if (haySeleccion) {
+            inputNueva.value = "";
+            inputNueva.disabled = true;
+            inputNueva.placeholder = "Ya seleccionó una familia";
+        } else {
+            inputNueva.disabled = false;
+            inputNueva.placeholder = "Ej: Lácteos";
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const select = document.getElementById('familiaId');
+        if (select) {
+            select.addEventListener('change', toggleNuevaFamilia);
+            toggleNuevaFamilia(); // aplica al cargar (importante al editar)
+        }
+    });
+</script>
+
+</body>
+</html>

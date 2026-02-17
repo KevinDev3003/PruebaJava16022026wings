@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Login</title>
+    <style>
+        body { font-family: Arial, sans-serif; background:#f5f5f5; }
+        .card { width: 360px; margin: 80px auto; background:#fff; padding:20px; border:1px solid #ddd; }
+        .row { display:flex; gap:10px; align-items:center; margin:10px 0; }
+        label { width: 95px; }
+        input { flex:1; padding:6px; }
+        button { padding:6px 14px; cursor:pointer; }
+        .error { background:#ffe6e6; border:1px solid #ffb3b3; padding:8px; margin-bottom:10px; color:#b30000; }
+    </style>
+</head>
+<body>
+
+<div class="card" style="border:2px solid #1e66ff; border-radius:10px; box-shadow:0 6px 18px rgba(30,102,255,0.15);">
+    <h3 style="margin-top:0;">Login</h3>
+
+    <div class="error" th:if="${error}" th:text="${error}"></div>
+
+    <form th:action="@{/login}" method="post">
+        <div class="row">
+            <label>Usuario:</label>
+            <input type="text" name="usuario" required />
+        </div>
+
+        <div class="row">
+            <label>Contraseña:</label>
+            <input type="password" name="contrasena" required />
+        </div>
+
+        <div style="text-align:center; margin-top:12px;">
+            <button type="submit">Ingresar</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
