@@ -20,8 +20,8 @@ Incluye login básico y mantenimiento (crear/editar/borrar) de productos y famil
 ## Requisitos
 
 - Java 21 instalado
-- Maven (opcional si usas el Maven Wrapper del proyecto)
-- MySQL Server (y opcional MySQL Workbench)
+- Maven 
+- MySQL Server MySQL Workbench
 
 ---
 
